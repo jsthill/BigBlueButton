@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Big Blue Button - Test Page</title>
+</head>
+<body>
+    <script>
+        function createMeeting() {
+            var meetingName = document.getElementById("meetingId").value;
+            meetingName = meetingName.replace(' ', '%20');
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'createMeeting', arguments: [meetingName]},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if( xmlDoc.getElementsByTagName('returncode')[0].childNodes[0].nodeValue == 'SUCCESS' ) {
+                        results = xmlDoc.documentElement + '<br>' + 
+                            'Meeting Id: <em>' + 
+                            xmlDoc.getElementsByTagName("meetingID")[0].childNodes[0].nodeValue + '</em>';
+                        document.getElementById("apiresponse").innerHTML = results;
+                    }
+                    else {
+                        console.log(obj);
+                        document.getElementById("apiresponse").innerHTML = obj;
+                    }
+                }
+            });
+        }
+
+        function joinMeeting() {
+            var attendeeName = document.getElementById("attendeeId").value;
+            attendeeName = attendeeName.replace(' ', '%20');
+            var meetingName = document.getElementById("meetingId").value;
+            meetingName = meetingName.replace(' ', '%20');            
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'joinAttendee', arguments: [meetingName, attendeeName]},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                        window.open(obj);                        
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+        function joinModerator() {
+            var moderatorName = document.getElementById("moderatorId").value;
+            moderatorName = moderatorName.replace(' ', '%20');
+            var meetingName = document.getElementById("meetingId").value;
+            meetingName = meetingName.replace(' ', '%20');      
+
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'joinModerator', arguments: [meetingName, moderatorName]},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                        var str = obj.slice(obj.indexOf('https'));
+                        window.open(str);                        
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+        function isMeetingRunning() {
+            var meetingName = document.getElementById("meetingId").value;
+            meetingName = meetingName.replace(' ', '%20');      
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'isMeetingRunning', arguments: [meetingName]},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+        function getMeetingInfo() {
+            var meetingName = document.getElementById("meetingId").value;
+            meetingName = meetingName.replace(' ', '%20');      
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'getMeetingInfo', arguments: [meetingName]},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+        function endMeeting() {
+            var meetingName = document.getElementById("meetingId").value;
+            meetingName = meetingName.replace(' ', '%20');      
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'endMeeting', arguments: [meetingName]},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                        // window.open(obj);
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+        function getMeetings() {
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'getMeetings', arguments: ['GetMeeting']},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                        console.log(obj);
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+        function enterMeeting() {
+            var results;
+
+            jQuery.ajax({
+                type: "POST",
+                url: 'bbb_api_lib.php',
+                // dataType: 'json',
+                data: {functionname: 'enterMeeting', arguments: ['EnterMeeting']},
+
+                success: function (obj, textstatus) {
+                    var parser, xmlDoc;
+                    parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(obj,"text/xml");
+
+                    if (textstatus == 'success') {
+                        document.getElementById("apiresponse").innerHTML = obj;
+                        window.open(obj);
+                    } 
+                    else {
+                        console.log(obj);
+                    }
+
+                    return;
+                }
+            });
+        }
+
+    </script>
+    <div class="container">
+        <h2>Create a new meeting</h2>
+        <p>Enter the meeting name and submit.</p>
+        <!-- <form action="/bbb_api_lib.php"> -->
+
+        <form>
+          <div class="form-group">
+            <label for="Meeting Name">Name:</label>
+            <input type="text" class="form-control" id="meetingId" name="meetingName">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="createMeeting()">Create</button>
+        </form>
+        <hr>
+        <h2>Join an existing meeting as a member.</h2>
+        <p>Enter your name.</p>
+        <form>
+          <div class="form-group">
+            <label for="Attendee Name">Name:</label>
+            <input type="text" class="form-control" id="attendeeId" name="attendeeName">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="joinMeeting()">Join</button>
+        </form>   
+        
+        <hr>
+        <h2>Join an existing meeting as moderator.</h2>
+        <p>Enter your name.</p>
+        <form>
+          <div class="form-group">
+            <label for="Moderator Name">Name:</label>
+            <input type="text" class="form-control" id="moderatorId" name="moderatorName">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="joinModerator()">Join Moderator</button>
+        </form>        
+
+        <hr>
+        <h3><p>Check the status on any running meeting.</p></h3>
+        <form>
+            <button type="button" class="btn btn-primary" onclick="isMeetingRunning()">Is Meeting Running?</button>
+            <button type="button" class="btn btn-info" onclick="getMeetingInfo()">Get Meeting Info</button>
+            <button type="button" class="btn btn-danger" onclick="endMeeting()">End Meeting</button>
+            <button type="button" class="btn btn-info" onclick="getMeetings()">Get Meetings Running</button>
+            <button type="button" class="btn btn-success" onclick="enterMeeting()">Enter Meeting</button>
+        </form>
+            
+      </div>
+
+    <div name="response">
+        <hr>
+        <h3>Response from API</h3>
+        <div id="apiresponse">
+
+        </div>
+    </div>
+</body>
+</html>
